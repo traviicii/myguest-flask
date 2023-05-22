@@ -55,8 +55,8 @@ class Client(db.Model):
     first_name = db.Column(db.String(25), nullable = False)
     last_name = db.Column(db.String(25), nullable = False)
     email = db.Column(db.String(100), nullable = False, unique = True)
-    phone = db.Column(db.Integer, autoincrement = False)
-    birthday = db.Column(db.DateTime)
+    phone = db.Column(db.String, autoincrement = False)
+    birthday = db.Column(db.Date)
     type = db.Column(db.String(5))
     notes = db.Column(db.String(800))
 
@@ -69,6 +69,19 @@ class Client(db.Model):
         self.birthday = birthday
         self.type = type
         self.notes = notes
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "phone": self.phone,
+            "birthday": self.birthday,
+            "type": self.type,
+            "notes": self.notes
+        }
 
     def saveToDB(self):
         db.session.add(self)

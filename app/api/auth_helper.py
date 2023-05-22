@@ -16,6 +16,11 @@ def verify_password(email, password):
         if check_password_hash(user.password, password):
             return user
 
+@token_auth.verify_token
+def verify_token(token):
+    user = User.query.filter_by(apitoken=token).first()
+    if user:
+        return user
         
 cred = credentials.Certificate(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
 firebase_admin.initialize_app(cred)
