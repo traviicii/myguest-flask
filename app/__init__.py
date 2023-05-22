@@ -5,6 +5,7 @@ from config import Config
 from .api import api
 from flask_cors import CORS
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 

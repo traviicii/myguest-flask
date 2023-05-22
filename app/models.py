@@ -10,32 +10,32 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key= True)
     photoURL = db.Column(db.String(500))
-    # username = db.Column(db.String(25), nullable = True)
     password = db.Column(db.String(150), nullable = True)
     uid = db.Column(db.String(50))
     first_name = db.Column(db.String(25), nullable = False)
     last_name = db.Column(db.String(25), nullable = False)
-    email = email = db.Column(db.String(100), nullable = False, unique = True)
-    date_created = date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
+    email = db.Column(db.String(100), nullable = False, unique = True)
+    apitoken = db.Column(db.String, unique = True)
+    date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
 
     def __init__(self, photoURL, password, uid, first_name, last_name, email ):
         self.photoURL = photoURL
-        # self.username = username
         self.password = generate_password_hash(password)
         self.uid = uid
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        # self.apitoken = token_hex(16)
+        self.apitoken = token_hex(16)
 
     def to_dict(self):
         return {
             'id': self.id,
-            "username": self.username,
+            'photoURL': self.photoURL,
             'uid': self.uid,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,
+            'apitoken': self.apitoken,
             'date_created': self.date_created
         }
     
