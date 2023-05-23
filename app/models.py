@@ -54,10 +54,10 @@ class Client(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False, autoincrement = False)
     first_name = db.Column(db.String(25), nullable = False)
     last_name = db.Column(db.String(25), nullable = False)
-    email = db.Column(db.String(100), nullable = False, unique = True)
+    email = db.Column(db.String(100), nullable = True, unique = True)
     phone = db.Column(db.String, autoincrement = False)
     birthday = db.Column(db.Date)
-    type = db.Column(db.String(5))
+    type = db.Column(db.String(20))
     notes = db.Column(db.String(800))
 
     def __init__(self, user_id, first_name, last_name, email, phone, birthday, type, notes):

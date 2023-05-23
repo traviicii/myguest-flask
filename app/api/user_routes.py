@@ -7,8 +7,8 @@ from ..models import Client
 token_auth = HTTPTokenAuth()
 
 @api.post('/addclient')
-@token_auth.verify_token
-def addClientAPI():
+@token_auth_required
+def addClientAPI(user):
     try:
         data = request.json
         print(data)
@@ -36,3 +36,18 @@ def addClientAPI():
             'status': 'not ok',
             'message': 'Not enough info provided to add client.'
         }, 400
+    
+
+@api.get('/userclients')
+@token_auth_required
+def getClientsAPI(user):
+    # user = token_auth.current_user()
+    # print(user)
+    clients = Client.query.filter_by(user_id= user.id).all()
+
+    if clients:
+        return {
+            'status': 'ok',
+            'results': len(clients),
+            'clients': [client.to_dict() for client in clients]
+        }, 200
