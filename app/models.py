@@ -60,13 +60,12 @@ class Client(db.Model):
     type = db.Column(db.String(20))
     notes = db.Column(db.String(800))
 
-    def __init__(self, user_id, first_name, last_name, email, phone, birthday, type, notes):
+    def __init__(self, user_id, first_name, last_name, email, phone, type, notes):
         self.user_id = user_id
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.phone = phone
-        self.birthday = birthday
         self.type = type
         self.notes = notes
 
