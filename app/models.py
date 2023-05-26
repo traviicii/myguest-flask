@@ -60,12 +60,13 @@ class Client(db.Model):
     type = db.Column(db.String(20))
     notes = db.Column(db.String(800))
 
-    def __init__(self, user_id, first_name, last_name, email, phone, type, notes):
+    def __init__(self, user_id, first_name, last_name, email, phone, birthday, type, notes):
         self.user_id = user_id
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.phone = phone
+        self.birthday = birthday
         self.type = type
         self.notes = notes
 
@@ -94,7 +95,7 @@ class Client(db.Model):
 class Colorchart(db.Model):
 
     id = db.Column(db.Integer, primary_key = True, unique=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable = False, autoincrement = False)
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
     client = db.relationship('Client')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False, autoincrement = False)
     porosity = db.Column(db.String(25))
@@ -110,23 +111,23 @@ class Colorchart(db.Model):
     skin_depth = db.Column(db.String(25))
     skin_tone = db.Column(db.String(25))
     eye_color = db.Column(db.String(25))
-
-    def __init__(self, client_id, user_id, porosity, hair_texture, elasticity, scalp_condition, natural_level, desired_level, contrib_pigment, gray_front, gray_sides, gray_back, skin_depth, skin_tone, eye_color):
+# , porosity, hair_texture, elasticity, scalp_condition, natural_level, desired_level, contrib_pigment, gray_front, gray_sides, gray_back, skin_depth, skin_tone, eye_color
+    def __init__(self, client_id, user_id):
         self.client_id = client_id
         self.user_id = user_id
-        self.porosity = porosity
-        self.hair_texture = hair_texture
-        self.elasticity = elasticity
-        self.scalp_condition = scalp_condition
-        self.natural_level = natural_level 
-        self.desired_level = desired_level 
-        self.contrib_pigment = contrib_pigment 
-        self.gray_front = gray_front
-        self.gray_sides = gray_sides 
-        self.gray_back =  gray_back
-        self.skin_depth = skin_depth
-        self.skin_tone = skin_tone
-        self.eye_color = eye_color
+        # self.porosity = porosity
+        # self.hair_texture = hair_texture
+        # self.elasticity = elasticity
+        # self.scalp_condition = scalp_condition
+        # self.natural_level = natural_level 
+        # self.desired_level = desired_level 
+        # self.contrib_pigment = contrib_pigment 
+        # self.gray_front = gray_front
+        # self.gray_sides = gray_sides 
+        # self.gray_back =  gray_back
+        # self.skin_depth = skin_depth
+        # self.skin_tone = skin_tone
+        # self.eye_color = eye_color
 
     # will probably need a to_dict() func
 
@@ -138,10 +139,30 @@ class Colorchart(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "client_id": self.client_id,
+            "user_id": self.user_id,
+            "porosity": self.porosity,
+            "hair_texture": self.hair_texture,
+            "elasticity": self.elasticity,
+            "scalp_condition": self.scalp_condition,
+            "natural_level": self.natural_level,
+            "desired_level": self.desired_level,
+            "contrib_pigment": self.contrib_pigment,
+            "gray_front": self.gray_front,
+            "gray_sides": self.gray_sides,
+            "gray_back": self.gray_back,
+            "skin_depth": self.skin_depth,
+            "skin_tone": self.skin_tone,
+            "eye_color": self.eye_color
+        }
+
 
 class Formula(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable = False, autoincrement = False)
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
     client = db.relationship('Client')
     notes = db.Column(db.String(750))
     price = db.Column(db.Float)
