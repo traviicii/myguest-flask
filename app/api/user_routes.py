@@ -97,6 +97,7 @@ def getSingleClientAPI(user, client_id):
     client = Client.query.filter_by(id=client_id).first()
 
     if client:
+        
         return {
             'status': 'ok',
             'client': client.to_dict()
