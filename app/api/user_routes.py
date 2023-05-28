@@ -81,8 +81,7 @@ def updateClientAPI(user, client_id):
 @token_auth_required
 def getClientsAPI(user):
     # user = token_auth.current_user()
-    print(user)
-    clients = Client.query.filter_by(user_id= user.id).all()
+    clients = Client.query.filter_by(user_id = user.id).all()
 
     if clients:
         return {
