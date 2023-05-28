@@ -166,6 +166,7 @@ class Formula(db.Model):
     client = db.relationship('Client')
     notes = db.Column(db.String(750))
     price = db.Column(db.Float)
+    date = db.Column(db.String)
     date_created = date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
 
     def __init__(self, client_id, notes, price):
