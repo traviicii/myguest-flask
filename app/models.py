@@ -166,6 +166,8 @@ class Formula(db.Model):
     client = db.relationship('Client')
     notes = db.Column(db.String(750))
     price = db.Column(db.Float)
+    photos = db.Column(db.String)
+    type = db.Column(db.String(20))
     date = db.Column(db.String)
     date_created = date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
 
@@ -173,6 +175,25 @@ class Formula(db.Model):
         self.client_id = client_id
         self.notes = notes
         self.price = price
+
+    def saveToDB(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def deleteFromDB(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class Image(db.Model):
+    id = db.Column(db.Integer, primary_key = True, unique=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
+    formula_id = db.Column(db.Integer, db.ForeignKey('formula.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
+    imageURL = db.Column(db.String, nullable = False)
+
+    def __init(self, client_id, formula_id, image_url):
+        self.client_id = client_id
+        self.formula_id = formula_id
+        self.imageURL = image_url
 
     def saveToDB(self):
         db.session.add(self)
