@@ -169,7 +169,7 @@ class Formula(db.Model):
     photos = db.Column(db.String)
     type = db.Column(db.String(20))
     date = db.Column(db.String)
-    date_created = date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
+    date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
 
     def __init__(self, client_id, notes, price):
         self.client_id = client_id
