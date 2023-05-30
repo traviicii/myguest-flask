@@ -2,7 +2,7 @@ from . import api
 from flask import request
 from flask_httpauth import HTTPTokenAuth
 from .auth_helper import token_auth_required, token_auth
-from ..models import Client, Colorchart
+from ..models import Client, Colorchart, Formula, Image
 
 token_auth = HTTPTokenAuth()
 
@@ -77,17 +77,20 @@ def updateClientAPI(user, client_id):
             }, 400
 
 
-@api.get('/userclients')
+@api.post('/userclients')
 @token_auth_required
 def getClientsAPI(user):
     # user = token_auth.current_user()
     clients = Client.query.filter_by(user_id = user.id).all()
 
+    data = request.json
+    sortby = data["sortby"]
+
     if clients:
         return {
             'status': 'ok',
             'results': len(clients),
-            'clients': sorted([client.to_dict() for client in clients], key=lambda client: client["first_name"].lower())
+            'clients': sorted([client.to_dict() for client in clients], key=lambda client: client[sortby].lower())
         }, 200
 
 @api.get('/client/<int:client_id>')
@@ -161,3 +164,71 @@ def updateColorChartAPI(user, client_id):
                 'status': 'not ok',
                 'message': 'Error updating colorchart.'
             }, 400
+
+@api.post('/client/<int:client_id>/createformula')
+@token_auth_required
+def addFormulaAPI(user, client_id):
+    try:
+        data = request.json
+        print(data)
+        
+        date = data['date']
+        price = data['price']
+        type = data["type"]
+        notes = data["notes"]
+
+        new_formula = Formula(client_id=client_id, notes=notes, price=price, type=type, date=date)
+        new_formula.saveToDB()
+        
+        formula = Formula.query.filter_by(date=date, client_id=client_id).first()
+        
+        return {
+                'status': 'ok',
+                'message': 'Successfully added new appointment entry.',
+                "forumula_id": formula.id
+            }, 201
+    except:
+        return {
+            'status': 'not ok',
+            'message': 'Error within create formula API route. An entry with that date might already exist.'
+        }, 400
+    
+@api.post('/client/<int:client_id>/addimages')
+@token_auth_required
+def addImagesAPI(user, client_id):
+    data = request.json
+    print(data)
+    
+    date = data['date']
+
+    try:
+        formula = Formula.query.filter_by(date=date, client_id=client_id).first()
+        print(formula.id, "FORMULA ID")
+
+        if data["image1_url"]:
+            image1_url = data["image1_url"]
+            image1_name = data["image1_name"]
+            URL1 = Image(client_id=client_id, formula_id=formula.id, image_url=image1_url, image_name=image1_name)
+            URL1.saveToDB()
+
+        if data["image2_url"]:
+            image2_url = data["image2_url"]
+            image2_name = data["image2_name"]
+            URL1 = Image(client_id=client_id, formula_id=formula.id, image_url=image2_url, image_name=image2_name)
+            URL1.saveToDB()
+
+        if data["image3_url"]:
+            image3_url = data["image3_url"]
+            image3_name = data["image3_name"]
+            URL1 = Image(client_id=client_id, formula_id=formula.id, image_url=image3_url, image_name=image3_name)
+            URL1.saveToDB()
+        
+        return {
+            'status': 'ok',
+            'message': 'Successfully saved images to database.',
+        }, 201
+    except:
+        return {
+            'status': 'not ok',
+            'message': 'Error within add images API route.'
+        }, 400

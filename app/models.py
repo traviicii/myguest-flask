@@ -165,16 +165,17 @@ class Formula(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
     client = db.relationship('Client')
     notes = db.Column(db.String(750))
-    price = db.Column(db.Float)
-    photos = db.Column(db.String)
+    price = db.Column(db.String)
     type = db.Column(db.String(20))
-    date = db.Column(db.String)
+    date = db.Column(db.String, unique = True, nullable = False)
     date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
 
-    def __init__(self, client_id, notes, price):
+    def __init__(self, client_id, notes, price, type, date):
         self.client_id = client_id
         self.notes = notes
         self.price = price
+        self.type = type
+        self.date = date
 
     def saveToDB(self):
         db.session.add(self)
@@ -188,12 +189,14 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key = True, unique=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
     formula_id = db.Column(db.Integer, db.ForeignKey('formula.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
-    imageURL = db.Column(db.String, nullable = False)
+    imageURL = db.Column(db.String, nullable = False, unique = False)
+    image_name = db.Column(db.String, nullable = False)
 
-    def __init(self, client_id, formula_id, image_url):
+    def __init__(self, client_id, formula_id, image_url, image_name):
         self.client_id = client_id
         self.formula_id = formula_id
         self.imageURL = image_url
+        self.image_name = image_name
 
     def saveToDB(self):
         db.session.add(self)
