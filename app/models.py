@@ -185,6 +185,17 @@ class Formula(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "client_id": self.client_id,
+            "notes": self.notes,
+            "price": self.price,
+            "type": self.type,
+            "date": self.date,
+            "date_created": self.date_created
+        }
+
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key = True, unique=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
@@ -205,3 +216,12 @@ class Image(db.Model):
     def deleteFromDB(self):
         db.session.delete(self)
         db.session.commit()
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "client_id": self.client_id,
+            "formula_id": self.formula_id,
+            "imageURL": self.imageURL,
+            "image_name": self.image_name
+        }

@@ -170,7 +170,6 @@ def updateColorChartAPI(user, client_id):
 def addFormulaAPI(user, client_id):
     try:
         data = request.json
-        print(data)
         
         date = data['date']
         price = data['price']
@@ -179,7 +178,7 @@ def addFormulaAPI(user, client_id):
 
         new_formula = Formula(client_id=client_id, notes=notes, price=price, type=type, date=date)
         new_formula.saveToDB()
-        
+
         formula = Formula.query.filter_by(date=date, client_id=client_id).first()
         
         return {
@@ -196,11 +195,8 @@ def addFormulaAPI(user, client_id):
 @api.post('/client/<int:client_id>/addimages')
 @token_auth_required
 def addImagesAPI(user, client_id):
-    data = request.json
-    print(data)
-    
+    data = request.json 
     date = data['date']
-
     try:
         formula = Formula.query.filter_by(date=date, client_id=client_id).first()
         print(formula.id, "FORMULA ID")
@@ -232,3 +228,64 @@ def addImagesAPI(user, client_id):
             'status': 'not ok',
             'message': 'Error within add images API route.'
         }, 400
+    
+@api.get('/client/<int:client_id>/getformulas')
+@token_auth_required
+def getFormulasAPI(user, client_id):
+    formulas = Formula.query.filter_by(client_id = client_id).all()
+    # data = request.json
+    # sortby = data["sortby"]
+
+    if formulas:
+        return {
+            'status': 'ok',
+            'results': len(formulas),
+            'formulas': sorted([formula.to_dict() for formula in formulas], reverse=True, key=lambda formula: formula["date"])
+        }, 200
+    else:
+        return {
+            'status': 'ok',
+            'message': 'No formulas to show'
+        }
+    
+@api.get('/formula/<int:formula_id>/getimages')
+@token_auth_required
+def getImagesAPI(user, formula_id):
+    try:
+        images = Image.query.filter_by(formula_id = formula_id).all()
+        if images:
+            return {
+                'status': 'ok',
+                'results': len(images),
+                'images': [image.to_dict() for image in images]
+            }, 200
+        
+        else:
+            return {
+                'status': 'ok',
+                'message': f'No images available for formula {formula_id}'
+            }
+    except:
+        return {
+            'status': 'not ok',
+            'message': 'Error getting images from API'
+        }
+    
+@api.get('/formula/<int:formula_id>/getformula')
+@token_auth_required
+def getFormulaAPI(user, formula_id):
+    formula = Formula.query.get(formula_id)
+    images = Image.query.filter_by(formula_id=formula_id).all()
+
+    if formula:
+        if images:
+            return {
+                'status': 'ok',
+                'formula': formula.to_dict(),
+                'images': [image.to_dict() for image in images]
+            }
+        else:
+            return {
+                'status': 'ok',
+                'formula': formula.to_dict()
+            }
