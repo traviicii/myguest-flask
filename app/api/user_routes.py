@@ -289,3 +289,41 @@ def getFormulaAPI(user, formula_id):
                 'status': 'ok',
                 'formula': formula.to_dict()
             }
+        
+@api.post('/formula/<int:formula_id>/updateformula')
+@token_auth_required
+def updateFormulaAPI(user, formula_id):
+    data = request.json 
+
+    formula = Formula.query.get(formula_id)
+
+    notes = data['notes']
+    price = data['price']
+    type = data['type']
+    date = data['date']
+    trash_can = data['imageTrashCan']
+
+    if formula:
+        formula.notes = notes
+        formula.price = price
+        formula.type = type
+        formula.date = date
+        formula.saveToDB()
+        if trash_can:
+            for id in trash_can:
+                image = Image.query.get(id)
+                image.deleteFromDB()
+            return {
+                'status': 'ok',
+                'message': 'Successfully update entry and images!'
+            }
+        
+        return {
+            'status': 'ok',
+            'message': 'Successfully updated entry!'
+        }
+    else:
+        return {
+            'status': 'not ok',
+            'message': 'Error occured updating formula. Try again?'
+        }
