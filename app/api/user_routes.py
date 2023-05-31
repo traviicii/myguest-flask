@@ -264,7 +264,7 @@ def getImagesAPI(user, formula_id):
             return {
                 'status': 'ok',
                 'message': f'No images available for formula {formula_id}'
-            }
+            }, 200
     except:
         return {
             'status': 'not ok',
@@ -283,12 +283,12 @@ def getFormulaAPI(user, formula_id):
                 'status': 'ok',
                 'formula': formula.to_dict(),
                 'images': [image.to_dict() for image in images]
-            }
+            }, 200
         else:
             return {
                 'status': 'ok',
                 'formula': formula.to_dict()
-            }
+            }, 200
         
 @api.post('/formula/<int:formula_id>/updateformula')
 @token_auth_required
@@ -316,14 +316,32 @@ def updateFormulaAPI(user, formula_id):
             return {
                 'status': 'ok',
                 'message': 'Successfully update entry and images!'
-            }
+            }, 200
         
         return {
             'status': 'ok',
             'message': 'Successfully updated entry!'
-        }
+        }, 200
     else:
         return {
             'status': 'not ok',
             'message': 'Error occured updating formula. Try again?'
-        }
+        }, 404
+
+@api.post('/formula/<int:formula_id>/deleteformula')
+@token_auth_required
+def deleteFormulaAPI(user, formula_id):
+    formula = Formula.query.get(formula_id)
+
+    if formula:
+        formula.deleteFromDB()
+        return {
+            'status': 'ok',
+            'message': "Appointment successfully deleted!"
+        }, 200
+    else:
+        return {
+            'status': 'not ok',
+            'meaasge': 'That appointment does not exist.'
+        }, 404
+
