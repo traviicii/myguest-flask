@@ -28,12 +28,12 @@ def addClientAPI(user):
                 
         return {
             'status': 'ok',
-            'message': 'Successfully added new client.',
+            'message': 'New client added!',
         }, 201
     except:
         return {
             'status': 'not ok',
-            'message': 'Not enough info provided to add client, or client may already exists.'
+            'message': 'Not enough info provided, or client may already exists.'
         }, 400
     
 @api.post('/delete/client/<int:client_id>')
@@ -45,7 +45,7 @@ def deleteClientAPI(user, client_id):
         client.deleteFromDB()
         return {
             'status': 'ok',
-            'message': "Client successfully deleted!"
+            'message': "Client deleted!"
         }, 200
 
 @api.post('/update/client/<int:client_id>')
@@ -157,7 +157,7 @@ def updateColorChartAPI(user, client_id):
                     
             return {
                 'status': 'ok',
-                'message': 'Colorchart information updated!',
+                'message': 'Colorchart updated!',
             }, 201
         except:
             return {
@@ -183,7 +183,7 @@ def addFormulaAPI(user, client_id):
         
         return {
                 'status': 'ok',
-                'message': 'Successfully added new appointment entry.',
+                'message': 'Appointment successfully added!',
                 "forumula_id": formula.id
             }, 201
     except:
