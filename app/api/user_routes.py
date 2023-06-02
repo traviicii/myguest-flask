@@ -92,6 +92,11 @@ def getClientsAPI(user):
             'results': len(clients),
             'clients': sorted([client.to_dict() for client in clients], key=lambda client: client[sortby].lower())
         }, 200
+    else:
+        return {
+            'status': 'ok',
+            'message': 'No clients.'
+        }
 
 @api.get('/client/<int:client_id>')
 @token_auth_required
@@ -199,7 +204,6 @@ def addImagesAPI(user, client_id):
     date = data['date']
     try:
         formula = Formula.query.filter_by(date=date, client_id=client_id).first()
-        print(formula.id, "FORMULA ID")
 
         if data["image1_url"]:
             image1_url = data["image1_url"]
