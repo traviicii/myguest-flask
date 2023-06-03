@@ -54,7 +54,7 @@ class Client(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
     first_name = db.Column(db.String(25), nullable = False)
     last_name = db.Column(db.String(25), nullable = False)
-    email = db.Column(db.String(100), nullable = False, unique = True)
+    email = db.Column(db.String(100), nullable = True, unique = True)
     phone = db.Column(db.String, autoincrement = False)
     birthday = db.Column(db.String)
     type = db.Column(db.String(20))
