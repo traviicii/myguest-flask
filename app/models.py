@@ -167,7 +167,7 @@ class Formula(db.Model):
     notes = db.Column(db.String(750))
     price = db.Column(db.String)
     type = db.Column(db.String(20))
-    date = db.Column(db.String, unique = True, nullable = False)
+    date = db.Column(db.String, unique = False, nullable = False)
     date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
 
     def __init__(self, client_id, notes, price, type, date):
