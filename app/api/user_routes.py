@@ -33,7 +33,7 @@ def addClientAPI(user):
     except:
         return {
             'status': 'not ok',
-            'message': 'Not enough info provided, or client may already exists.'
+            'message': 'Not enough info provided, or client may already exist.'
         }, 400
     
 @api.post('/delete/client/<int:client_id>')
