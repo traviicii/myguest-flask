@@ -164,7 +164,7 @@ class Colorchart(db.Model):
 class Formula(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
-    client = db.relationship('Client', cascade="all, delete")
+    client = db.relationship('Client', backref=db.backref('formulas', cascade='all, delete-orphan'))
     notes = db.Column(db.String(750))
     price = db.Column(db.String)
     type = db.Column(db.String(20))
