@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), nullable = False, unique = True)
     apitoken = db.Column(db.String, unique = True)
     date_created = db.Column(db.DateTime, nullable = False, default=datetime.utcnow())
+    clients = db.relationship('Client', cascade="all, delete")
 
     def __init__(self, photoURL, password, uid, first_name, last_name, email ):
         self.photoURL = photoURL
@@ -96,7 +97,7 @@ class Colorchart(db.Model):
 
     id = db.Column(db.Integer, primary_key = True, unique=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
-    client = db.relationship('Client', cascade="all, delete")
+    client = db.relationship('Client') #, cascade="all, delete"
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable = False, autoincrement = False)
     porosity = db.Column(db.String(25))
     hair_texture = db.Column(db.String(25))
